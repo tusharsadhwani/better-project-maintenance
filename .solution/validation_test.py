@@ -25,3 +25,27 @@ def test_api_version_prefix():
                 and not node.value.startswith("/api/v1")
             ):
                 raise_issue(file, node.lineno, "api endpoint missing version prefix")
+
+
+class ModelVerifier(ast.NodeVisitor):
+    def __init__(self, file) -> None:
+        self.file = file
+
+    def visit_ClassDef(self, node):
+        """Ensures every class extending `BaseModel` has an id field (UUID)"""
+        if node.bases[0].id == "BaseModel":
+            properties = [item for item in node.body if isinstance(item, ast.AnnAssign)]
+            for prop in properties:
+                if (
+                    isinstance(prop.annotation, ast.Name)
+                    and prop.annotation.id == "UUID"
+                ):
+                    break
+            else:
+                raise_issue(self.file, node.lineno, "UUID field not present in model")
+
+
+def test_model_must_use_uuid():
+    for file in get_python_files():
+        tree = ast.parse(file.read_text())
+        ModelVerifier(file).visit(tree)

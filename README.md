@@ -10,5 +10,5 @@ Demo code for the talk "Better project maintenance with static analysis".
 
 ## But where's the AST tests?
 
-It's in the `solution` folder. Copy over the file to the `tests` folder, or run
-`pytest solution`
+It's in the `.solution` folder. Copy over the file to the `tests` folder, or run
+`pytest .solution`
