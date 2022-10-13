@@ -9,7 +9,7 @@ def get_python_files():
 
 
 def raise_issue(file, line, message):
-    raise pytest.fail(f"File {file} on line {line}: {message}")
+    pytest.fail(f"File {file} on line {line}: {message}")
 
 
 def test_api_version_prefix():
